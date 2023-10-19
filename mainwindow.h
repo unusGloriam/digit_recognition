@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
+#include "paintscene.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,10 +21,16 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *draw_number_scene;
     QPointF prev_point;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    PaintScene* pScene;
+    QTimer *timer;
+
+private slots:
+    void slotTimer();
+
+    void onRecognizeButtonClicked();
+    void onClearButtonClicked();
+    void onLearnButtonClicked();
 };
 #endif // MAINWINDOW_H

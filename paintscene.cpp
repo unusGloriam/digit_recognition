@@ -1,0 +1,54 @@
+#include "paintscene.h"
+
+PaintScene::PaintScene(QObject *parent) :
+    QGraphicsScene(parent),
+
+    painted(false) // по умолчанию ничего не нарисовано на сцене
+{
+    // here nothing to do
+}
+
+PaintScene::~PaintScene() {
+    // here nothing to do
+}
+
+void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    // при нажатии кнопки мыши отрисовываем эллипс
+    addEllipse(
+        event->scenePos().x() - 1,
+        event->scenePos().y() - 1,
+        2,
+        2,
+        QPen(Qt::NoPen),
+        QBrush(Qt::red)
+    );
+
+    // сохраняем координаты точки нажатия
+    previousPoint = event->scenePos();
+}
+
+void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    // отрисовываем линии с использованием предыдущей координаты
+    addLine(
+        previousPoint.x(),
+        previousPoint.y(),
+        event->scenePos().x(),
+        event->scenePos().y(),
+        QPen(Qt::red,2,Qt::SolidLine,Qt::RoundCap)
+    );
+
+    // обновляем данные о предыдущей координате
+    previousPoint = event->scenePos();
+
+    painted = true; // считаем, что теперь что-то да нарисовано на сцене
+}
+
+void PaintScene::setPainted(const bool painted) {
+    this->painted = painted;
+}
+
+bool PaintScene::isPainted() const {
+    return painted;
+}

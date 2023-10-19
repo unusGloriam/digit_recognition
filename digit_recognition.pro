@@ -9,11 +9,30 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    geneticteacherbuilder.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    neuron.cpp \
+    paintscene.cpp \
+    perceptron.cpp \
+    processing_image.cpp \
+    simpeteacherbuilder.cpp \
+    teacher.cpp \
+    teacherbuilder.cpp \
+    teacherdirector.cpp
 
 HEADERS += \
-    mainwindow.h
+    geneticteacherbuilder.h \
+    main.h \
+    mainwindow.h \
+    neuron.h \
+    paintscene.h \
+    perceptron.h \
+    processing_image.h \
+    simpeteacherbuilder.h \
+    teacher.h \
+    teacherbuilder.h \
+    teacherdirector.h
 
 FORMS += \
     mainwindow.ui
@@ -27,3 +46,6 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    opencv/sources/modules/highgui/src/window_QT.qrc

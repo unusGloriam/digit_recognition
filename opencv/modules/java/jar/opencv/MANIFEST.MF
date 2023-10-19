@@ -1,0 +1,5 @@
+Specification-Title: OpenCV
+Specification-Version: 4.8.0
+Implementation-Title: OpenCV
+Implementation-Version: unknown
+Implementation-Date: 

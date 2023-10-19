@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Я окошко</string>
+   <string>Цифройка</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -48,7 +48,7 @@
      </sizepolicy>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="recognizeButton">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -61,7 +61,7 @@
      <string>Распознать</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="clearButton">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -71,20 +71,30 @@
      </rect>
     </property>
     <property name="text">
-     <string>Очистить окно</string>
+     <string>Очистить</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="learnButton">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>70</x>
       <y>70</y>
-      <width>221</width>
+      <width>161</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Обучить...</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>51</width>
+      <height>24</height>
+     </rect>
     </property>
    </widget>
   </widget>

@@ -1,0 +1,281 @@
+#use_cache "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache"
+#do_unpack "v0.1.2a.zip" "fa4b3e25167319cb0fa9432ef8281945" "https://github.com/opencv/ade/archive/v0.1.2a.zip" "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ade"
+#cmake_download "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ade/fa4b3e25167319cb0fa9432ef8281945-v0.1.2a.zip" "https://github.com/opencv/ade/archive/v0.1.2a.zip"
+#try 1
+# timeout on name lookup is not supported
+#   Trying 140.82.121.4:443...
+# Connected to github.com (140.82.121.4) port 443
+# schannel: disabled automatic use of client certificate
+# ALPN: curl offers h2,http/1.1
+# schannel: connection hostname (github.com) validated against certificate name (github.com)
+# ALPN: server accepted h2
+# using HTTP/2
+# [HTTP/2] [1] OPENED stream for https://github.com/opencv/ade/archive/v0.1.2a.zip
+# [HTTP/2] [1] [:method: GET]
+# [HTTP/2] [1] [:scheme: https]
+# [HTTP/2] [1] [:authority: github.com]
+# [HTTP/2] [1] [:path: /opencv/ade/archive/v0.1.2a.zip]
+# [HTTP/2] [1] [user-agent: curl/8.4.0]
+# [HTTP/2] [1] [accept: */*]
+# GET /opencv/ade/archive/v0.1.2a.zip HTTP/2
+# Host: github.com
+# User-Agent: curl/8.4.0
+# Accept: */*
+# 
+# schannel: remote party requests renegotiation
+# schannel: renegotiating SSL/TLS connection
+# schannel: connection hostname (github.com) validated against certificate name (github.com)
+# schannel: SSL/TLS connection renegotiated
+# schannel: remote party requests renegotiation
+# schannel: renegotiating SSL/TLS connection
+# schannel: connection hostname (github.com) validated against certificate name (github.com)
+# schannel: SSL/TLS connection renegotiated
+# schannel: failed to decrypt data, need more data
+# HTTP/2 302 
+# server: GitHub.com
+# date: Thu, 19 Oct 2023 19:18:13 GMT
+# content-type: text/html; charset=utf-8
+# vary: X-PJAX, X-PJAX-Container, Turbo-Visit, Turbo-Frame, Accept-Encoding, Accept, X-Requested-With
+# location: https://codeload.github.com/opencv/ade/zip/refs/tags/v0.1.2a
+# cache-control: max-age=0, private
+# strict-transport-security: max-age=31536000; includeSubdomains; preload
+# x-frame-options: deny
+# x-content-type-options: nosniff
+# x-xss-protection: 0
+# referrer-policy: no-referrer-when-downgrade
+# content-security-policy: default-src 'none'; base-uri 'self'; child-src github.com/assets-cdn/worker/ gist.github.com/assets-cdn/worker/; connect-src 'self' uploads.github.com www.githubstatus.com collector.github.com raw.githubusercontent.com api.githubcopilot.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com cdn.optimizely.com logx.optimizely.com/v1/events objects-origin.githubusercontent.com *.actions.githubusercontent.com productionresultssa0.blob.core.windows.net/ productionresultssa1.blob.core.windows.net/ productionresultssa2.blob.core.windows.net/ productionresultssa3.blob.core.windows.net/ productionresultssa4.blob.core.windows.net/ productionresultssa5.blob.core.windows.net/ productionresultssa6.blob.core.windows.net/ productionresultssa7.blob.core.windows.net/ productionresultssa8.blob.core.windows.net/ productionresultssa9.blob.core.windows.net/ wss://*.actions.githubusercontent.com github-production-repository-image-32fea6.s3.amazonaws.com github-production-release-asset-2e65be.s3.amazonaws.com insights.github.com wss://alive.github.com; font-src github.githubassets.com; form-action 'self' github.com gist.github.com objects-origin.githubusercontent.com; frame-ancestors 'none'; frame-src viewscreen.githubusercontent.com notebooks.githubusercontent.com support.github.com; img-src 'self' data: github.githubassets.com media.githubusercontent.com camo.githubusercontent.com identicons.github.com avatars.githubusercontent.com github-cloud.s3.amazonaws.com objects.githubusercontent.com secured-user-images.githubusercontent.com/ user-images.githubusercontent.com/ private-user-images.githubusercontent.com opengraph.githubassets.com github-production-user-asset-6210df.s3.amazonaws.com customer-stories-feed.github.com spotlights-feed.github.com objects-origin.githubusercontent.com *.githubusercontent.com; manifest-src 'self'; media-src github.com user-images.githubusercontent.com/ secured-user-images.githubusercontent.com/ private-user-images.githubusercontent.com github-production-user-asset-6210df.s3.amazonaws.com; script-src github.githubassets.com; style-src 'unsafe-inline' github.githubassets.com; upgrade-insecure-requests; worker-src github.com/assets-cdn/worker/ gist.github.com/assets-cdn/worker/
+# content-length: 0
+# x-github-request-id: 0ACC:C01E:31A1B6C:321D13F:6531811C
+# 
+# [0 bytes data]
+# Connection #0 to host github.com left intact
+# Issue another request to this URL: 'https://codeload.github.com/opencv/ade/zip/refs/tags/v0.1.2a'
+# timeout on name lookup is not supported
+#   Trying 140.82.121.10:443...
+# Connected to codeload.github.com (140.82.121.10) port 443
+# schannel: disabled automatic use of client certificate
+# ALPN: curl offers h2,http/1.1
+# schannel: connection hostname (codeload.github.com) validated against certificate name (*.github.com)
+# ALPN: server accepted h2
+# using HTTP/2
+# [HTTP/2] [1] OPENED stream for https://codeload.github.com/opencv/ade/zip/refs/tags/v0.1.2a
+# [HTTP/2] [1] [:method: GET]
+# [HTTP/2] [1] [:scheme: https]
+# [HTTP/2] [1] [:authority: codeload.github.com]
+# [HTTP/2] [1] [:path: /opencv/ade/zip/refs/tags/v0.1.2a]
+# [HTTP/2] [1] [user-agent: curl/8.4.0]
+# [HTTP/2] [1] [accept: */*]
+# GET /opencv/ade/zip/refs/tags/v0.1.2a HTTP/2
+# Host: codeload.github.com
+# User-Agent: curl/8.4.0
+# Accept: */*
+# 
+# schannel: remote party requests renegotiation
+# schannel: renegotiating SSL/TLS connection
+# schannel: connection hostname (codeload.github.com) validated against certificate name (*.github.com)
+# schannel: SSL/TLS connection renegotiated
+# schannel: remote party requests renegotiation
+# schannel: renegotiating SSL/TLS connection
+# schannel: connection hostname (codeload.github.com) validated against certificate name (*.github.com)
+# schannel: SSL/TLS connection renegotiated
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# HTTP/2 200 
+# access-control-allow-origin: https://render.githubusercontent.com
+# content-disposition: attachment; filename=ade-0.1.2a.zip
+# content-length: 167786
+# content-security-policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+# content-type: application/zip
+# cross-origin-resource-policy: cross-origin
+# etag: "d21a41598f8ea46e358787d91467632c1a903d606a5ba9feb1fca92e2183a1b6"
+# strict-transport-security: max-age=31536000
+# vary: Authorization,Accept-Encoding,Origin
+# x-content-type-options: nosniff
+# x-frame-options: deny
+# x-xss-protection: 1; mode=block
+# date: Thu, 19 Oct 2023 19:18:53 GMT
+# x-github-request-id: 0AD7:84F9:8CDD5:9E4F4:6531811D
+# 
+# [7685 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [7329 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [10951 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [9534 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [10904 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [5480 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [14529 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [16384 bytes data]
+# [15014 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [2740 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [16384 bytes data]
+# [4110 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [7070 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [13653 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [8211 bytes data]
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# schannel: failed to decrypt data, need more data
+# [1370 bytes data]
+# schannel: failed to decrypt data, need more data
+# [5478 bytes data]
+# Connection #1 to host codeload.github.com left intact
+# 
+
+#check_md5 "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ade/fa4b3e25167319cb0fa9432ef8281945-v0.1.2a.zip"
+#mkdir "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ade"
+#unpack "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ade" "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ade/fa4b3e25167319cb0fa9432ef8281945-v0.1.2a.zip"
+#do_copy "opencv_videoio_ffmpeg.dll" "4aaef1456e282e5ef665d65555f47f56" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/opencv_videoio_ffmpeg.dll" "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg"
+#missing "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg/opencv_videoio_ffmpeg.dll"
+#cmake_download "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/4aaef1456e282e5ef665d65555f47f56-opencv_videoio_ffmpeg.dll" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/opencv_videoio_ffmpeg.dll"
+#try 1
+#check_md5 "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/4aaef1456e282e5ef665d65555f47f56-opencv_videoio_ffmpeg.dll"
+#copy "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg/opencv_videoio_ffmpeg.dll" "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/4aaef1456e282e5ef665d65555f47f56-opencv_videoio_ffmpeg.dll"
+#do_copy "opencv_videoio_ffmpeg_64.dll" "38a638851e064c591ce812e27ed43f1f" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/opencv_videoio_ffmpeg_64.dll" "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg"
+#missing "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg/opencv_videoio_ffmpeg_64.dll"
+#cmake_download "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/38a638851e064c591ce812e27ed43f1f-opencv_videoio_ffmpeg_64.dll" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/opencv_videoio_ffmpeg_64.dll"
+#try 1
+#check_md5 "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/38a638851e064c591ce812e27ed43f1f-opencv_videoio_ffmpeg_64.dll"
+#copy "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg/opencv_videoio_ffmpeg_64.dll" "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/38a638851e064c591ce812e27ed43f1f-opencv_videoio_ffmpeg_64.dll"
+#do_copy "ffmpeg_version.cmake" "8862c87496e2e8c375965e1277dee1c7" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/ffmpeg_version.cmake" "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg"
+#missing "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg/ffmpeg_version.cmake"
+#cmake_download "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/8862c87496e2e8c375965e1277dee1c7-ffmpeg_version.cmake" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/ffmpeg_version.cmake"
+#try 1
+# timeout on name lookup is not supported
+#   Trying 185.199.109.133:443...
+# Connected to raw.githubusercontent.com (185.199.109.133) port 443
+# schannel: disabled automatic use of client certificate
+# ALPN: curl offers h2,http/1.1
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (*.github.io)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (github.io)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (*.github.com)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (github.com)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (www.github.com)
+# schannel: connection hostname (raw.githubusercontent.com) validated against certificate name (*.githubusercontent.com)
+# ALPN: server accepted h2
+# schannel: remote party requests renegotiation
+# schannel: renegotiating SSL/TLS connection
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (*.github.io)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (github.io)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (*.github.com)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (github.com)
+# schannel: connection hostname (raw.githubusercontent.com) did not match against certificate name (www.github.com)
+# schannel: connection hostname (raw.githubusercontent.com) validated against certificate name (*.githubusercontent.com)
+# schannel: SSL/TLS connection renegotiated
+# using HTTP/2
+# [HTTP/2] [1] OPENED stream for https://raw.githubusercontent.com/opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/ffmpeg_version.cmake
+# [HTTP/2] [1] [:method: GET]
+# [HTTP/2] [1] [:scheme: https]
+# [HTTP/2] [1] [:authority: raw.githubusercontent.com]
+# [HTTP/2] [1] [:path: /opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/ffmpeg_version.cmake]
+# [HTTP/2] [1] [user-agent: curl/8.4.0]
+# [HTTP/2] [1] [accept: */*]
+# GET /opencv/opencv_3rdparty/7da61f0695eabf8972a2c302bf1632a3d99fb0d5/ffmpeg/ffmpeg_version.cmake HTTP/2
+# Host: raw.githubusercontent.com
+# User-Agent: curl/8.4.0
+# Accept: */*
+# 
+# HTTP/2 200 
+# cache-control: max-age=300
+# content-security-policy: default-src 'none'; style-src 'unsafe-inline'; sandbox
+# content-type: text/plain; charset=utf-8
+# etag: "fa5c2d2566a9e9cb5c0f40f5e54addc1e8fbb92669597f6694da5879cf972785"
+# strict-transport-security: max-age=31536000
+# x-content-type-options: nosniff
+# x-frame-options: deny
+# x-xss-protection: 1; mode=block
+# x-github-request-id: 3BB2:412B:A93F79:AFC014:65316F08
+# accept-ranges: bytes
+# date: Thu, 19 Oct 2023 19:20:24 GMT
+# via: 1.1 varnish
+# x-served-by: cache-fra-eddf8230128-FRA
+# x-cache: HIT
+# x-cache-hits: 1
+# x-timer: S1697743225.526398,VS0,VE153
+# vary: Authorization,Accept-Encoding,Origin
+# access-control-allow-origin: *
+# cross-origin-resource-policy: cross-origin
+# x-fastly-request-id: ecd2c68a5597fdd776a0d2c490c49070e64e4e61
+# expires: Thu, 19 Oct 2023 19:25:24 GMT
+# source-age: 0
+# content-length: 362
+# 
+# [362 bytes data]
+# Connection #0 to host raw.githubusercontent.com left intact
+# 
+
+#check_md5 "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/8862c87496e2e8c375965e1277dee1c7-ffmpeg_version.cmake"
+#copy "D:/Downloads/scoped_dir13072_1330966658/opencv/build-sources/3rdparty/ffmpeg/ffmpeg_version.cmake" "D:/Downloads/scoped_dir13072_1330966658/opencv/sources/.cache/ffmpeg/8862c87496e2e8c375965e1277dee1c7-ffmpeg_version.cmake"
