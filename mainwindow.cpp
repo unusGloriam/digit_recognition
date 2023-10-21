@@ -170,9 +170,7 @@ void MainWindow::onLearnButtonClicked() {
         }
 
         QDir full_dataset_directory(path);
-//        directory.setNameFilters(QStringList( // указываем искомые расширения
-//            "*.jpg"
-//        ));
+
         QStringList dir_filter;
         dir_filter << "0" << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9";
         full_dataset_directory.setNameFilters(dir_filter); // картинки для разных цифр выборки должны быть помещены в соответствующие директории
@@ -180,7 +178,7 @@ void MainWindow::onLearnButtonClicked() {
         // учим
         // составляем матрицу обучения
         QVector<QVector<Matrix>> num_dataset; // вектор векторов матриц входных сигналов для каждой цифры выборки
-        for (int i = 0; i < 10; ++i){ // проходим по 10 векторам, каждый - с выборкой для соответствующей цифры
+        for (int i = 0; i < 10; ++i) { // проходим по 10 векторам, каждый - с выборкой для соответствующей цифры
             QDir current_num_dir(path + "/" + static_cast<QChar>(i + '0')); // настроили путь к директории с выборками очередной цифры
             current_num_dir.setNameFilters(QStringList( // указываем искомые расширения
                     "*.jpg"
@@ -191,19 +189,18 @@ void MainWindow::onLearnButtonClicked() {
                 | QDir::NoSymLinks
             );
             const auto files = current_num_dir.entryList();
-            for (auto k = 0; k < files.count(); k++) {  // для отлада Очка - смотрим найденные файлы в каталоге для очередной цифры
+            for (auto k = 0; k < files.count(); k++) {  // для отладчика - смотрим найденные файлы в каталоге для очередной цифры
                 qDebug() << "Found file: " << files[k];
             }
-            for (int j = 0; j < files.count(); ++j){ // проходим по содержимому папки с выборками для конкретной цифры i
+
+            for (int j = 0; j < files.count(); ++j) { // проходим по содержимому папки с выборками для конкретной цифры i
 
                 /* откроем изображение и сформируем матрицу признаков */
                 QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение
 
                 Matrix input_matrix; // матрица для хранения
-                const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
-                const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
-
-                uint32_t nWhites = 0;
+                const auto width = image.width(); // узнаем ширину изображения
+                const auto height = image.height(); // узнаем высоту изображения
 
                 for (auto h = 0; h < height; h++) {
                     auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
@@ -220,15 +217,16 @@ void MainWindow::onLearnButtonClicked() {
                             && (green >= 200) // зеленый полный
                             && (blue >= 200) // синий полный
                         ) {
-                            input_matrix[h][w] = 0; // сбрасываем признак в матрице
-                            nWhites++;
+                            input_matrix[h][w] = 1; // устанавливаем признак в матрице
                         }
                         else {
-                            input_matrix[h][w] = 1; // устанавливаем признак в матрице
+                            input_matrix[h][w] = 0; // сбрасываем признак в матрице
                         }
                     }
                 }
 
+                num_dataset.push_back(QVector<Matrix>());
+                num_dataset[i].resize(files.count());
                 num_dataset[i][j] = input_matrix;
             }
         }
