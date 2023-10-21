@@ -10,6 +10,9 @@
 
 static const auto CONFIRMATION_SYMBOL = "✓";
 static const auto TEMP_FILE_NAME = "image.tmp.jpg";
+static const auto WEIGHTS_FILE_NAME = "weights.txt";
+
+Perceptron perceptron;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -42,6 +45,26 @@ MainWindow::MainWindow(QWidget *parent)
     const auto nItems = ui->comboBox->count();
     for (auto i = 0; i < nItems; i++) {
         ui->comboBox->setItemData(i, Qt::AlignHCenter, Qt::TextAlignmentRole);
+    }
+
+    /* считываем веса из файла */
+    if (QFile::exists(WEIGHTS_FILE_NAME)){ // ...только если он существует
+        QVector<Matrix> weights;
+        QFile weights_file(WEIGHTS_FILE_NAME);
+        if (weights_file.open(QIODevice::ReadWrite)){ // файл открылся - читаем из него
+            QTextStream stream(&weights_file);
+            for (int i = 0; i < NUM_DIGITS; ++i){ // проходим по 10 числам
+                for (int line = 0; line < NUM_ROWS; ++ line){ // проходим по строкам матрицы
+                    QString line_str = stream.readLine();
+                    QStringList weight_str = line_str.split(' ');
+                    for (int weight = 0; weight < NUM_COLUMNS; ++weight){ // проходим по каждому весу
+                        weights[i][line][weight] = weight_str[weight].toInt();
+                    }
+                }
+            }
+            perceptron.set_weight_matrix(weights);
+            weights_file.close();
+        }
     }
 }
 
@@ -84,7 +107,7 @@ void MainWindow::onRecognizeButtonClicked() {
     /* откроем изображение и сформируем матрицу признаков */
     QImage image(TEMP_FILE_NAME); // открываем изображение
 
-    Matrix weights; // матрица для хранения
+    Matrix input_matrix; // матрица для хранения
     const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
     const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
 
@@ -105,17 +128,16 @@ void MainWindow::onRecognizeButtonClicked() {
                 && (green >= 200) // зеленый полный
                 && (blue >= 200) // синий полный
             ) {
-                weights[h][w] = 0; // сбрасываем признак в матрице
+                input_matrix[h][w] = 0; // сбрасываем признак в матрице
                 nWhites++;
             }
             else {
-                weights[h][w] = 1; // устанавливаем признак в матрице
+                input_matrix[h][w] = 1; // устанавливаем признак в матрице
             }
         }
     }
 
-    Perceptron perceptron;
-    perceptron.set_input_matrix(weights); // задаем персептрону матрицу весов
+    perceptron.set_input_matrix(input_matrix); // задаем персептрону матрицу весов
     const auto digit = perceptron.recognition(); // распознаем нарисованную цифру
 
     ui->graphicsView->scene()->clear(); // очищаем сцену от наших художеств
@@ -136,7 +158,7 @@ void MainWindow::onClearButtonClicked() {
 void MainWindow::onLearnButtonClicked() {
     const auto itemName = ui->comboBox->currentText();
 
-    if (!itemName[0].isDigit()) { // если правильная цифра не задана
+    if (!itemName[0].isDigit()) { // если правильная цифра не задана => пользователь хочет учить по выборке из jpg картинок
         const auto path = QFileDialog::getExistingDirectory( // заставим пользователя выбрать каталог
             this,
             tr("Каталог с изображениями"),
@@ -147,27 +169,99 @@ void MainWindow::onLearnButtonClicked() {
             return; // значит мы забиваем на него
         }
 
-        QDir directory(path);
-        directory.setNameFilters(QStringList( // указываем искомые расширения
-            "*.jpg"
-        ));
+        QDir full_dataset_directory(path);
+//        directory.setNameFilters(QStringList( // указываем искомые расширения
+//            "*.jpg"
+//        ));
+        QStringList dir_filter;
+        dir_filter << "0" << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9";
+        full_dataset_directory.setNameFilters(dir_filter); // картинки для разных цифр выборки должны быть помещены в соответствующие директории
 
-        directory.setFilter(QDir::NoFilter // указываем, какие объекты выбирать
-            | QDir::Files
-            | QDir::NoDotAndDotDot
-            | QDir::NoSymLinks
-        );
+        // учим
+        // составляем матрицу обучения
+        QVector<QVector<Matrix>> num_dataset; // вектор векторов матриц входных сигналов для каждой цифры выборки
+        for (int i = 0; i < 10; ++i){ // проходим по 10 векторам, каждый - с выборкой для соответствующей цифры
+            QDir current_num_dir(path + "/" + static_cast<QChar>(i + '0')); // настроили путь к директории с выборками очередной цифры
+            current_num_dir.setNameFilters(QStringList( // указываем искомые расширения
+                    "*.jpg"
+            ));
+            current_num_dir.setFilter(QDir::NoFilter // указываем, какие объекты выбирать
+                | QDir::Files
+                | QDir::NoDotAndDotDot
+                | QDir::NoSymLinks
+            );
+            const auto files = current_num_dir.entryList();
+            for (auto k = 0; k < files.count(); k++) {  // для отлада Очка - смотрим найденные файлы в каталоге для очередной цифры
+                qDebug() << "Found file: " << files[k];
+            }
+            for (int j = 0; j < files.count(); ++j){ // проходим по содержимому папки с выборками для конкретной цифры i
 
-        qDebug() << "Scanning: " << directory.path(); // выведем имя каталога, в котором ищем файлы
-        const auto files = directory.entryList(); // получаем список подходящих файлов
-        for (auto i = 0; i < files.count(); i++) {
-            qDebug() << "Found file: " << files[i];
+                /* откроем изображение и сформируем матрицу признаков */
+                QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение
+
+                Matrix input_matrix; // матрица для хранения
+                const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
+                const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
+
+                uint32_t nWhites = 0;
+
+                for (auto h = 0; h < height; h++) {
+                    auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
+
+                    for (auto w = 0; w < width; w++) {
+                        QRgb pixelData = rowData[w]; // получаем информацию о пикселе
+
+                        const auto red = qRed(pixelData); // определяем составляющую красного цвета
+                        const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
+                        const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+
+                        if (true // если это белый цвет
+                            && (red >= 200) // красный полный
+                            && (green >= 200) // зеленый полный
+                            && (blue >= 200) // синий полный
+                        ) {
+                            input_matrix[h][w] = 0; // сбрасываем признак в матрице
+                            nWhites++;
+                        }
+                        else {
+                            input_matrix[h][w] = 1; // устанавливаем признак в матрице
+                        }
+                    }
+                }
+
+                num_dataset[i][j] = input_matrix;
+            }
+        }
+
+        Teacher perceptron_teacher(num_dataset); // создали учителя
+        perceptron_teacher.teach(); // учитель обучил...
+        perceptron.set_weight_matrix(perceptron_teacher.get_weight_matrix()); // ...и передал полученные веса персептрону...
+        // ...и мы записали эти веса в текстовый файл, чтобы при след. запуске не переобучать
+        QString filename = "weights.txt";
+        if (QFile::exists(filename)){ // файл с весами уже существует - удалим
+            QFile::remove(filename);
+        }
+        QFile weights_file(filename);
+        if (weights_file.open(QIODevice::ReadWrite)){ // файл создался и открылся - пишем в него
+            QTextStream stream(&weights_file);
+            QVector<Matrix> weights_to_write = perceptron_teacher.get_weight_matrix();
+            for (int i = 0; i < weights_to_write.size(); ++i){ // проходим по 10 (вроде как) векторам, соотв. цифрам 0-9, с их матрицами весов
+                for (size_t line = 0; line < weights_to_write[i].size(); ++line){ // проходим по строкам матрицы весов для очередной i цифры
+                    for (size_t weight = 0; weight < weights_to_write[i][line].size(); ++weight){ // проходим по каждому весу в очередной строке очередной матрицы весов
+                        stream << weights_to_write[i][line][weight] << " ";
+                        stream.flush();
+                    }
+                    stream << Qt::endl;
+                    stream.flush();
+                }
+            }
+            weights_file.close();
         }
 
         return;
     }
 
-    const auto digit = itemName[0].toLatin1() - '0'; // реально введенная цифра
+    //const auto digit = itemName[0].toLatin1() - '0'; // реально введенная цифра
 
     if (!pScene->isPainted()) { // если на сцене ничего не нарисовано
         QMessageBox::warning(
@@ -182,5 +276,60 @@ void MainWindow::onLearnButtonClicked() {
     // здесь мы должны считать изображение из файла TEMP_FILE_NAME и начать его обучение
     // брать изображение из сцены нельзя, поскольку там отображается распознанная цифра
 
+    // считываем изображение
 
+    QImage image(TEMP_FILE_NAME); // открываем изображение
+
+    Matrix input_matrix; // матрица для хранения
+    const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
+    const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
+
+    uint32_t nWhites = 0;
+
+    for (auto h = 0; h < height; h++) {
+        auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
+
+        for (auto w = 0; w < width; w++) {
+            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
+
+            const auto red = qRed(pixelData); // определяем составляющую красного цвета
+            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
+            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+
+            if (true // если это белый цвет
+                && (red >= 200) // красный полный
+                && (green >= 200) // зеленый полный
+                && (blue >= 200) // синий полный
+            ) {
+                input_matrix[h][w] = 0; // сбрасываем признак в матрице
+                nWhites++;
+            }
+            else {
+                input_matrix[h][w] = 1; // устанавливаем признак в матрице
+            }
+        }
+    }
+
+    // дообучаем по изображению
+    perceptron.teach(itemName[0].digitValue());
+    // перезапись файла с весами
+    if (QFile::exists(WEIGHTS_FILE_NAME)){ // файл с весами уже существует - удалим
+        QFile::remove(WEIGHTS_FILE_NAME);
+    }
+    QFile weights_file(WEIGHTS_FILE_NAME);
+    if (weights_file.open(QIODevice::ReadWrite)){ // файл создался и открылся - пишем в него
+        QTextStream stream(&weights_file);
+        QVector<Matrix> weights_to_write = perceptron.get_weight_matrix();
+        for (int i = 0; i < weights_to_write.size(); ++i){ // проходим по 10 (вроде как) векторам, соотв. цифрам 0-9, с их матрицами весов
+            for (size_t line = 0; line < weights_to_write[i].size(); ++line){ // проходим по строкам матрицы весов для очередной i цифры
+                for (size_t weight = 0; weight < weights_to_write[i][line].size(); ++weight){ // проходим по каждому весу в очередной строке очередной матрицы весов
+                    stream << weights_to_write[i][line][weight] << " ";
+                    stream.flush();
+                }
+                stream << Qt::endl;
+                stream.flush();
+            }
+        }
+        weights_file.close();
+    }
 }

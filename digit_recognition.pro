@@ -47,5 +47,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES += \
-    opencv/sources/modules/highgui/src/window_QT.qrc
+#RESOURCES += \
+#    opencv/sources/modules/highgui/src/window_QT.qrc
