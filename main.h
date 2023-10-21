@@ -6,8 +6,8 @@
 
 const auto LIMIT = 400;
 
-const auto NUM_ROWS = 33;
-const auto NUM_COLUMNS = 20;
+const auto NUM_ROWS = 28;
+const auto NUM_COLUMNS = 28;
 const auto NUM_DIGITS = 10;
 
 const auto POPULATION_SIZE = 20;

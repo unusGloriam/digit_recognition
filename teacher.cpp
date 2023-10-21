@@ -1,4 +1,5 @@
 #include "teacher.h"
+#include "qdebug.h"
 
 Teacher::Teacher( QVector< QVector<Matrix> > t_matrix) {
     training_matrix = t_matrix;
@@ -21,14 +22,19 @@ QVector< QVector<Matrix> > Teacher::get_training_matrix() {
 }
 
 void Teacher::teach() {
-    for (int j = 0; j < training_matrix[0].size(); ++j) {
+    for (int j = 0; j < training_matrix[0].size(); ++j) {        
         for (int i = 0; i < 10; ++i) {
-            perceptron.set_input_matrix(training_matrix[i][j]);
-            int correct_index = perceptron.recognition();
-            if (correct_index != i) {
-                perceptron.teach(i);
+            if (training_matrix[i].size() > j){
+                perceptron.set_input_matrix(training_matrix[i][j]);
+                int correct_index = perceptron.recognition();
+                if (correct_index != i) {
+                    perceptron.teach(i);
+                }
             }
         }
+//        if (j % 500 == 0 || j == 5922 || j == 5923){
+//            qDebug() << "Passed j == " << j;
+//        }
     }
 }
 

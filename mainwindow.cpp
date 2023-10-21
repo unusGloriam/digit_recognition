@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     /* считываем веса из файла */
     if (QFile::exists(WEIGHTS_FILE_NAME)){ // ...только если он существует
         QVector<Matrix> weights;
+        weights.resize(NUM_DIGITS);
         QFile weights_file(WEIGHTS_FILE_NAME);
         if (weights_file.open(QIODevice::ReadWrite)){ // файл открылся - читаем из него
             QTextStream stream(&weights_file);
@@ -189,9 +190,9 @@ void MainWindow::onLearnButtonClicked() {
                 | QDir::NoSymLinks
             );
             const auto files = current_num_dir.entryList();
-            for (auto k = 0; k < files.count(); k++) {  // для отладчика - смотрим найденные файлы в каталоге для очередной цифры
-                qDebug() << "Found file: " << files[k];
-            }
+//            for (auto k = 0; k < files.count(); k++) {  // для отладчика - смотрим найденные файлы в каталоге для очередной цифры
+//                qDebug() << "Found file: " << files[k];
+//            }
 
             for (int j = 0; j < files.count(); ++j) { // проходим по содержимому папки с выборками для конкретной цифры i
 
@@ -234,18 +235,17 @@ void MainWindow::onLearnButtonClicked() {
         Teacher perceptron_teacher(num_dataset); // создали учителя
         perceptron_teacher.teach(); // учитель обучил...
         perceptron.set_weight_matrix(perceptron_teacher.get_weight_matrix()); // ...и передал полученные веса персептрону...
-        // ...и мы записали эти веса в текстовый файл, чтобы при след. запуске не переобучать
-        QString filename = "weights.txt";
-        if (QFile::exists(filename)){ // файл с весами уже существует - удалим
-            QFile::remove(filename);
+        // ...и мы записали эти веса в текстовый файл, чтобы при след. запуске не переобучать        
+        if (QFile::exists(WEIGHTS_FILE_NAME)){ // файл с весами уже существует - удалим
+            QFile::remove(WEIGHTS_FILE_NAME);
         }
-        QFile weights_file(filename);
+        QFile weights_file(WEIGHTS_FILE_NAME);
         if (weights_file.open(QIODevice::ReadWrite)){ // файл создался и открылся - пишем в него
             QTextStream stream(&weights_file);
             QVector<Matrix> weights_to_write = perceptron_teacher.get_weight_matrix();
-            for (int i = 0; i < weights_to_write.size(); ++i){ // проходим по 10 (вроде как) векторам, соотв. цифрам 0-9, с их матрицами весов
-                for (size_t line = 0; line < weights_to_write[i].size(); ++line){ // проходим по строкам матрицы весов для очередной i цифры
-                    for (size_t weight = 0; weight < weights_to_write[i][line].size(); ++weight){ // проходим по каждому весу в очередной строке очередной матрицы весов
+            for (int i = 0; i < NUM_DIGITS; ++i){ // проходим по 10 (вроде как) векторам, соотв. цифрам 0-9, с их матрицами весов
+                for (size_t line = 0; line < NUM_COLUMNS; ++line){ // проходим по строкам матрицы весов для очередной i цифры
+                    for (size_t weight = 0; weight < NUM_ROWS; ++weight){ // проходим по каждому весу в очередной строке очередной матрицы весов
                         stream << weights_to_write[i][line][weight] << " ";
                         stream.flush();
                     }
