@@ -1,10 +1,15 @@
 #include "mainwindow.h"
+
+#include "main.h"
+#include "perceptron.h"
 #include "ui_mainwindow.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QGraphicsTextItem>
 
 static const auto CONFIRMATION_SYMBOL = "✓";
+static const auto TEMP_FILE_NAME = "image.tmp.jpg";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     /* настраиваем сцену */
     pScene = new PaintScene();
     ui->graphicsView->setScene(pScene);
+    ui->graphicsView->setBackgroundBrush(Qt::white);
 
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::slotTimer);
@@ -46,7 +52,12 @@ MainWindow::~MainWindow() {
 void MainWindow::slotTimer() {
     timer->stop();
 
-    ui->graphicsView->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+    ui->graphicsView->setSceneRect( // задаем границы сцены
+        1, // убираем серую границу сверху
+        1, // убираем серую границу слева
+        ui->graphicsView->geometry().width() - 2, // убираем серую границу справа
+        ui->graphicsView->geometry().height() - 2 // убираем серую границу снизу
+    );
 
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -65,8 +76,56 @@ void MainWindow::onRecognizeButtonClicked() {
         return; // и завершим обработку
     }
 
+    /* уменьшим изображение до 28х28 и сохраним */
     const auto pixMap = ui->graphicsView->grab(ui->graphicsView->sceneRect().toRect());
-    pixMap.save("image.tmp.png");
+    const auto scaledPixmap = pixMap.scaled(QSize(28, 28)); // пропорционально изменим размер изображения
+    scaledPixmap.save(TEMP_FILE_NAME); // сохраним изображение, нарисованное на сцене
+
+    /* откроем изображение и сформируем матрицу признаков */
+    QImage image(TEMP_FILE_NAME); // открываем изображение
+
+    Matrix weights; // матрица для хранения
+    const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
+    const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
+
+    uint32_t nWhites = 0;
+
+    for (auto h = 0; h < height; h++) {
+        auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
+
+        for (auto w = 0; w < width; w++) {
+            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
+
+            const auto red = qRed(pixelData); // определяем составляющую красного цвета
+            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
+            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+
+            if (true // если это белый цвет
+                && (red >= 200) // красный полный
+                && (green >= 200) // зеленый полный
+                && (blue >= 200) // синий полный
+            ) {
+                weights[h][w] = 0; // сбрасываем признак в матрице
+                nWhites++;
+            }
+            else {
+                weights[h][w] = 1; // устанавливаем признак в матрице
+            }
+        }
+    }
+
+    Perceptron perceptron;
+    perceptron.set_input_matrix(weights); // задаем персептрону матрицу весов
+    const auto digit = perceptron.recognition(); // распознаем нарисованную цифру
+
+    ui->graphicsView->scene()->clear(); // очищаем сцену от наших художеств
+
+    const auto digitItem = new QGraphicsTextItem(QString::number(digit)); // создадим объект с распознанной цифрой
+    digitItem->setPos(-5, -25); // зададим начальную позицию цифры
+    digitItem->setScale(4); // зададим масштаб цифры
+    digitItem->show(); // отобразим цифру
+
+    ui->graphicsView->scene()->addItem(digitItem); // прикрепим цифру к сцене
 }
 
 void MainWindow::onClearButtonClicked() {
@@ -120,7 +179,8 @@ void MainWindow::onLearnButtonClicked() {
         return;
     }
 
-
+    // здесь мы должны считать изображение из файла TEMP_FILE_NAME и начать его обучение
+    // брать изображение из сцены нельзя, поскольку там отображается распознанная цифра
 
 
 }

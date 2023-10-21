@@ -47,6 +47,12 @@
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
+    <property name="maximumSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
    </widget>
    <widget class="QPushButton" name="recognizeButton">
     <property name="geometry">
