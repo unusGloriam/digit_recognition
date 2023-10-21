@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(pScene);
     ui->graphicsView->setBackgroundBrush(Qt::white);
 
+    QPixmap pixmap("29.jpg");
+    const auto scaledPixmap = pixmap.scaled(QSize(50, 50));
+    ui->graphicsView->scene()->addPixmap(scaledPixmap);
+
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::slotTimer);
     timer->start(100);
@@ -90,6 +94,7 @@ void MainWindow::slotTimer() {
 void MainWindow::onRecognizeButtonClicked() {
     const auto itemName = ui->comboBox->currentText();
 
+    /*
     if (!pScene->isPainted()) { // если на сцене ничего не нарисовано
         QMessageBox::warning( // выдадим соответствующее предупреждение
             this,
@@ -98,7 +103,7 @@ void MainWindow::onRecognizeButtonClicked() {
             QMessageBox::Ok
         );
         return; // и завершим обработку
-    }
+    }*/
 
     /* уменьшим изображение до 28х28 и сохраним */
     const auto pixMap = ui->graphicsView->grab(ui->graphicsView->sceneRect().toRect());
@@ -129,14 +134,18 @@ void MainWindow::onRecognizeButtonClicked() {
                 && (green >= 200) // зеленый полный
                 && (blue >= 200) // синий полный
             ) {
-                input_matrix[h][w] = 0; // сбрасываем признак в матрице
+                input_matrix[h][w] = 1; // сбрасываем признак в матрице
                 nWhites++;
             }
             else {
-                input_matrix[h][w] = 1; // устанавливаем признак в матрице
+                input_matrix[h][w] = 0; // устанавливаем признак в матрице
             }
         }
     }
+
+    QMessageBox messageBox;
+    messageBox.setText("Число белых пикселей = " + QString::number(nWhites));
+    messageBox.exec();
 
     perceptron.set_input_matrix(input_matrix); // задаем персептрону матрицу весов
     const auto digit = perceptron.recognition(); // распознаем нарисованную цифру
@@ -282,8 +291,6 @@ void MainWindow::onLearnButtonClicked() {
     const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
     const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
 
-    uint32_t nWhites = 0;
-
     for (auto h = 0; h < height; h++) {
         auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
 
@@ -300,7 +307,6 @@ void MainWindow::onLearnButtonClicked() {
                 && (blue >= 200) // синий полный
             ) {
                 input_matrix[h][w] = 0; // сбрасываем признак в матрице
-                nWhites++;
             }
             else {
                 input_matrix[h][w] = 1; // устанавливаем признак в матрице
