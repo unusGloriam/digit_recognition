@@ -338,6 +338,11 @@ void MainWindow::onLearnButtonClicked() {
             }
             weights_file.close();
         }
+        //pScene->update();
+
+        QMessageBox messageBox;
+        messageBox.setText("Обучение завершено");
+        messageBox.exec();
 
         return;
     }

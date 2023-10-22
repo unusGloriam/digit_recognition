@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <tr1/array>
 
-const auto LIMIT = 65535;
+const auto LIMIT = 400;
 
 const auto NUM_ROWS = 28;
 const auto NUM_COLUMNS = 28;

@@ -63,7 +63,7 @@ void Neuron::inc_weight(Matrix input_matrix) {
     }
 }
 
-bool Neuron::recognition(Matrix input_matrix) {
-    count_sum_scaled_signals(input_matrix);
+bool Neuron::recognition(/*Matrix input_matrix*/) {
+    /*count_sum_scaled_signals(input_matrix);*/
     return (sum_scaled_signals >= LIMIT);
 }

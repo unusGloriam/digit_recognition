@@ -68,7 +68,7 @@ public:
      * @return
      */
 
-    bool recognition(Matrix input_matrix);
+    bool recognition(/*Matrix input_matrix*/);
 
 private:
     Matrix weight_matrix; //! @brief веса синопсов

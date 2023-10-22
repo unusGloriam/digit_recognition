@@ -31,7 +31,7 @@ public:
 
 protected:
 
-    bool painted;
+    bool painted;    
 
 private:
     QPointF previousPoint; // координаты предыдущей точки

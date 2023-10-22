@@ -53,10 +53,10 @@ QVector<int> Perceptron::get_sum_scaled_signals() {
 int Perceptron::recognition() {
     int index_neyron = 0;
     int max_sum_scaled_signals = neurons[index_neyron].count_sum_scaled_signals(input_matrix);
-    qDebug() << "0 sum: " << max_sum_scaled_signals;
+    //qDebug() << "0 sum: " << max_sum_scaled_signals;
     for (int i = 1; i < NUM_DIGITS; ++i) {
         int sum_scaled_signals = neurons[i].count_sum_scaled_signals(input_matrix);
-        qDebug() << i << " sum: " << sum_scaled_signals;
+        //qDebug() << i << " sum: " << sum_scaled_signals;
         if (sum_scaled_signals > max_sum_scaled_signals) {
             max_sum_scaled_signals = sum_scaled_signals;
             index_neyron = i;
@@ -77,14 +77,21 @@ QVector<Matrix> Perceptron::teach(int correct_index) {
 //    int max_counter = 1;
 //    int max_index = 0;
     // сначала нейроны
-    for (int i = 0; i < NUM_DIGITS; ++i){
+    /*for (int i = 0; i < NUM_DIGITS; ++i){
         //neurons[i].count_sum_scaled_signals(input_matrix);
         if (neurons[i].recognition(input_matrix) && i != correct_index){
             neurons[i].dec_weight(input_matrix);
         } else if (i == correct_index && !neurons[i].recognition(input_matrix)){
             neurons[i].inc_weight(input_matrix);
         }
-    }
+    }*/
+    for (int i = 0; i < NUM_DIGITS; ++i) {
+            if (i != correct_index && neurons[i].recognition()) {
+                neurons[i].dec_weight(input_matrix);
+            }
+        }
+        neurons[correct_index].inc_weight(input_matrix);
+        return get_weight_matrix();
 
     // теперь максимумы
 //    for (int i = 0; i < NUM_DIGITS; ++i){ // ищем наибольшую сумму

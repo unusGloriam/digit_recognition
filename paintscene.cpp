@@ -2,7 +2,6 @@
 
 PaintScene::PaintScene(QObject *parent) :
     QGraphicsScene(parent),
-
     painted(false) // по умолчанию ничего не нарисовано на сцене
 {
     // here nothing to do
@@ -14,6 +13,7 @@ PaintScene::~PaintScene() {
 
 void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+
     // при нажатии кнопки мыши отрисовываем эллипс
     addEllipse(
         event->scenePos().x() - 1,
@@ -30,6 +30,7 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+
     // отрисовываем линии с использованием предыдущей координаты
     addLine(
         previousPoint.x(),
