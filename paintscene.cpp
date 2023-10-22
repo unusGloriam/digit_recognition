@@ -18,8 +18,8 @@ void PaintScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     addEllipse(
         event->scenePos().x() - 1,
         event->scenePos().y() - 1,
-        5,
-        5,
+        4,
+        4,
         QPen(Qt::NoPen),
         QBrush(Qt::white)
     );
@@ -36,7 +36,7 @@ void PaintScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         previousPoint.y(),
         event->scenePos().x(),
         event->scenePos().y(),
-        QPen(Qt::white,5,Qt::SolidLine,Qt::RoundCap)
+        QPen(Qt::white,4,Qt::SolidLine,Qt::RoundCap)
     );
 
     // обновляем данные о предыдущей координате
