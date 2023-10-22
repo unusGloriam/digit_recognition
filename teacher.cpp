@@ -58,24 +58,26 @@ void Teacher::teach() {
                 }
             }
         }
-        if (QFile::exists(QString(k))){ // файл с весами уже существует - удалим
-            QFile::remove(QString(k));
-        }
-        QFile weights_file((QString(k)));
-        if (weights_file.open(QIODevice::ReadWrite)){ // файл создался и открылся - пишем в него
-            QTextStream stream(&weights_file);
-            QVector<Matrix> weights_to_write = perceptron.get_weight_matrix();
-            for (int i = 0; i < weights_to_write.size(); ++i){ // проходим по 10 (вроде как) векторам, соотв. цифрам 0-9, с их матрицами весов
-                for (size_t line = 0; line < weights_to_write[i].size(); ++line){ // проходим по строкам матрицы весов для очередной i цифры
-                    for (size_t weight = 0; weight < weights_to_write[i][line].size(); ++weight){ // проходим по каждому весу в очередной строке очередной матрицы весов
-                        stream << weights_to_write[i][line][weight] << " ";
+        if (k % 100 == 0){
+            if (QFile::exists(QString(k))){ // файл с весами уже существует - удалим
+                QFile::remove(QString(k));
+            }
+            QFile weights_file((QString(k)));
+            if (weights_file.open(QIODevice::ReadWrite)){ // файл создался и открылся - пишем в него
+                QTextStream stream(&weights_file);
+                QVector<Matrix> weights_to_write = perceptron.get_weight_matrix();
+                for (int i = 0; i < weights_to_write.size(); ++i){ // проходим по 10 (вроде как) векторам, соотв. цифрам 0-9, с их матрицами весов
+                    for (size_t line = 0; line < weights_to_write[i].size(); ++line){ // проходим по строкам матрицы весов для очередной i цифры
+                        for (size_t weight = 0; weight < weights_to_write[i][line].size(); ++weight){ // проходим по каждому весу в очередной строке очередной матрицы весов
+                            stream << weights_to_write[i][line][weight] << " ";
+                            stream.flush();
+                        }
+                        stream << Qt::endl;
                         stream.flush();
                     }
-                    stream << Qt::endl;
-                    stream.flush();
                 }
+                weights_file.close();
             }
-            weights_file.close();
         }
     }
 }
