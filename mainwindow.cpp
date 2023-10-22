@@ -25,9 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(pScene);
     ui->graphicsView->setBackgroundBrush(Qt::black);
 
-    QPixmap pixmap("35.jpg");
-    const auto scaledPixmap = pixmap.scaled(QSize(56, 56));
-    ui->graphicsView->scene()->addPixmap(scaledPixmap);
+//    QPixmap pixmap("35.jpg");
+//    const auto scaledPixmap = pixmap.scaled(QSize(56, 56));
+//    ui->graphicsView->scene()->addPixmap(scaledPixmap);
 
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::slotTimer);
@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->recognizeButton, SIGNAL(clicked()), this, SLOT(onRecognizeButtonClicked()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(onClearButtonClicked()));
     connect(ui->learnButton, SIGNAL(clicked()), this, SLOT(onLearnButtonClicked()));
+    connect(ui->testButton, SIGNAL(clicked()), this, SLOT(onTestButtonClicked()));
 
     /* настраиваем ComboBox */
     ui->comboBox->addItem(CONFIRMATION_SYMBOL);
@@ -94,7 +95,6 @@ void MainWindow::slotTimer() {
 void MainWindow::onRecognizeButtonClicked() {
     const auto itemName = ui->comboBox->currentText();
 
-    /*
     if (!pScene->isPainted()) { // если на сцене ничего не нарисовано
         QMessageBox::warning( // выдадим соответствующее предупреждение
             this,
@@ -103,7 +103,7 @@ void MainWindow::onRecognizeButtonClicked() {
             QMessageBox::Ok
         );
         return; // и завершим обработку
-    }*/
+    }
 
     /* уменьшим изображение до 28х28 и сохраним */
     const auto pixMap = ui->graphicsView->grab(ui->graphicsView->sceneRect().toRect());
@@ -117,13 +117,8 @@ void MainWindow::onRecognizeButtonClicked() {
     const auto width = image.width(); // узнаем ширину изображения (в теории 28, но лучше посчитаем)
     const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
 
-    uint32_t nWhites = 0;
-
     for (auto h = 0; h < height; h++) {
-        auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
-
         for (auto w = 0; w < width; w++) {
-
             QColor pixel_color = image.pixelColor(h, w);
             if (pixel_color.red() >= 200 && pixel_color.green() >= 200 && pixel_color.blue() >= 200){ // если белый цвет
                 input_matrix[h][w] = 1;
@@ -131,48 +126,7 @@ void MainWindow::onRecognizeButtonClicked() {
                 input_matrix[h][w] = 0;
             }
         }
-//            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
-
-//            const auto red = qRed(pixelData); // определяем составляющую красного цвета
-//            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
-//            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
-
-//            if (true // если это белый цвет
-//                && (red >= 200) // красный полный
-//                && (green >= 200) // зеленый полный
-//                && (blue >= 200) // синий полный
-//            ) {
-//                input_matrix[h][w] = 1; // сбрасываем признак в матрице
-//                nWhites++;
-//            }
-//            else {
-//                input_matrix[h][w] = 0; // устанавливаем признак в матрице
-//            }
-//        }
-    }
-    // отладка
-    QPixmap new_pixmap(QSize(28,28));
-    auto new_img = new_pixmap.toImage();
-    new_img.convertToFormat(QImage::Format_Indexed8);
-    for (auto h = 0; h < height; h++){
-        for (auto w = 0; w < width; w++){
-            if (input_matrix[h][w] == 1){
-                new_img.setPixelColor(h, w, Qt::white);
-            } else if (input_matrix[h][w] == 0){
-                new_img.setPixelColor(h, w, Qt::black);
-            }
-        }
-    }
-    new_img.save("on_recognize_button.jpg");
-    QImage new_img2 = new_img.mirrored();
-    QTransform rotateTransform;
-    rotateTransform.rotate(90);
-    QImage rotatedImage = new_img2.transformed(rotateTransform);
-    rotatedImage.save("on_recognize_button_flipped.jpg");
-
-    QMessageBox messageBox;
-    messageBox.setText("Число белых пикселей = " + QString::number(nWhites));
-    messageBox.exec();
+    }    
 
     perceptron.set_input_matrix(input_matrix); // задаем персептрону матрицу весов
     const auto digit = perceptron.recognition(); // распознаем нарисованную цифру
@@ -186,6 +140,8 @@ void MainWindow::onRecognizeButtonClicked() {
     digitItem->show(); // отобразим цифру
 
     ui->graphicsView->scene()->addItem(digitItem); // прикрепим цифру к сцене
+    //ui->graphicsView->sendEvent(pScene, QEvent::MouseButtonPress);
+    //sendEvent(pScene, QEvent::MouseButtonPress);
 }
 
 void MainWindow::onClearButtonClicked() {
@@ -229,9 +185,6 @@ void MainWindow::onLearnButtonClicked() {
                 | QDir::NoSymLinks
             );
             const auto files = current_num_dir.entryList();
-//            for (auto k = 0; k < files.count(); k++) {  // для отладчика - смотрим найденные файлы в каталоге для очередной цифры
-//                qDebug() << "Found file: " << files[k];
-//            }
             num_dataset[i].resize(files.count());
             for (int j = 0; j < files.count(); ++j) { // проходим по содержимому папки с выборками для конкретной цифры i
 
@@ -243,8 +196,6 @@ void MainWindow::onLearnButtonClicked() {
                 const auto height = image.height(); // узнаем высоту изображения
 
                 for (auto h = 0; h < height; h++) {
-                    //auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
-
                     for (auto w = 0; w < width; w++) {
 
                         QColor pixel_color = image.pixelColor(h, w);
@@ -253,64 +204,9 @@ void MainWindow::onLearnButtonClicked() {
                         } else {
                             input_matrix[h][w] = 0;
                         }
-//                        QRgb pixelData = rowData[w]; // получаем информацию о пикселе
-
-//                        const auto red = qRed(pixelData); // определяем составляющую красного цвета
-//                        const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
-//                        const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
-
-//                        if (true // если это белый цвет
-//                            && (red >= 200) // красный полный
-//                            && (green >= 200) // зеленый полный
-//                            && (blue >= 200) // синий полный
-//                        ) {
-//                            input_matrix[h][w] = 1; // устанавливаем признак в матрице
-//                        }
-//                        else {
-//                            input_matrix[h][w] = 0; // сбрасываем признак в матрице
-//                        }
-//                        if (i == 4 && j == 0){  // отлад Очка
-//                            if (true // если это белый цвет
-//                                && (red >= 200) // красный полный
-//                                && (green >= 200) // зеленый полный
-//                                && (blue >= 200) // синий полный
-//                            ) {
-//                                debug_line.push_back('0');
-//                            }
-//                            else {
-//                                debug_line.push_back('1');
-//                            }
-//                        }
                     }
-                    //debug_line.push_back('\n');
                 }
-                // для отладочных целей преобразуем обратно в картинку
-                if (i == 4 && j == 0){
-                    QPixmap new_pixmap(QSize(28,28));
-                    auto new_img = new_pixmap.toImage();
-                    new_img.convertToFormat(QImage::Format_Indexed8);
 
-                    for (auto h = 0; h < height; h++){
-                        for (auto w = 0; w < width; w++){
-                            (QChar(input_matrix[h][w]));
-                            //qDebug() << input_matrix[h][w];
-                            if (input_matrix[h][w] == 1){
-                                new_img.setPixelColor(h, w, Qt::white);
-                            } else if (input_matrix[h][w] == 0){
-                                new_img.setPixelColor(h, w, Qt::black);
-                            }
-                        }
-                    }
-                    new_img.save(files.at(j));
-                    QImage new_img2 = new_img.mirrored(true, false);
-                    new_img2.save("flipped " + files.at(j));
-                    image.save("on_random_four.jpg");
-//                    QMessageBox messageBox;
-//                    messageBox.setText(debug_line);
-//                    messageBox.exec();
-                }
-//                num_dataset.push_back(QVector<Matrix>());
-//                num_dataset[i].resize(10);
                 num_dataset[i][j] = input_matrix;
             }
         }
@@ -338,7 +234,6 @@ void MainWindow::onLearnButtonClicked() {
             }
             weights_file.close();
         }
-        //pScene->update();
 
         QMessageBox messageBox;
         messageBox.setText("Обучение завершено");
@@ -346,8 +241,6 @@ void MainWindow::onLearnButtonClicked() {
 
         return;
     }
-
-    //const auto digit = itemName[0].toLatin1() - '0'; // реально введенная цифра
 
     if (!pScene->isPainted()) { // если на сцене ничего не нарисовано
         QMessageBox::warning(
@@ -359,9 +252,6 @@ void MainWindow::onLearnButtonClicked() {
         return;
     }
 
-    // здесь мы должны считать изображение из файла TEMP_FILE_NAME и начать его обучение
-    // брать изображение из сцены нельзя, поскольку там отображается распознанная цифра
-
     // считываем изображение
 
     QImage image(TEMP_FILE_NAME); // открываем изображение
@@ -371,8 +261,6 @@ void MainWindow::onLearnButtonClicked() {
     const auto height = image.height(); // узнаем высоту изображения (в теории 28, но лучше посчитаем)
 
     for (auto h = 0; h < height; h++) {
-        auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
-
         for (auto w = 0; w < width; w++) {
             QColor pixel_color = image.pixelColor(h, w);
             if (pixel_color.red() >= 200 && pixel_color.green() >= 200 && pixel_color.blue() >= 200){ // если белый цвет
@@ -380,22 +268,6 @@ void MainWindow::onLearnButtonClicked() {
             } else {
                 input_matrix[h][w] = 0;
             }
-//            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
-
-//            const auto red = qRed(pixelData); // определяем составляющую красного цвета
-//            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
-//            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
-
-//            if (true // если это белый цвет
-//                && (red >= 200) // красный полный
-//                && (green >= 200) // зеленый полный
-//                && (blue >= 200) // синий полный
-//            ) {
-//                input_matrix[h][w] = 1; // сбрасываем признак в матрице
-//            }
-//            else {
-//                input_matrix[h][w] = 0; // устанавливаем признак в матрице
-//            }
         }
     }
 
@@ -421,4 +293,89 @@ void MainWindow::onLearnButtonClicked() {
         }
         weights_file.close();
     }
+}
+
+void MainWindow::onTestButtonClicked() {
+    ui->label->setText("Тест...");
+
+    const auto path = QFileDialog::getExistingDirectory( // заставим пользователя выбрать каталог
+        this,
+        tr("Каталог с изображениями"),
+        ""
+    );
+
+    if (path.isEmpty()) { // если пользователь забил на выбор каталога
+        return; // значит мы забиваем на него
+    }
+
+    QDir full_dataset_directory(path);
+
+    QStringList dir_filter;
+    dir_filter << "0" << "1" << "2" << "3" << "4" << "5" << "6" << "7" << "8" << "9";
+    full_dataset_directory.setNameFilters(dir_filter); // картинки для разных цифр выборки должны быть помещены в соответствующие директории
+
+    size_t total_picks = 0; // всего картинок в тестовой выборке
+    size_t guessed = 0;
+
+    // учим
+    // составляем матрицу обучения
+    QVector<QVector<Matrix>> num_dataset; // вектор векторов матриц входных сигналов для каждой цифры выборки
+    num_dataset.resize(10);
+    for (int i = 0; i < 10; ++i) { // проходим по 10 векторам, каждый - с выборкой для соответствующей цифры
+        //num_dataset.push_back(QVector<Matrix>());
+        QDir current_num_dir(path + "/" + static_cast<QChar>(i + '0')); // настроили путь к директории с выборками очередной цифры
+        current_num_dir.setNameFilters(QStringList( // указываем искомые расширения
+                "*.jpg"
+        ));
+        current_num_dir.setFilter(QDir::NoFilter // указываем, какие объекты выбирать
+            | QDir::Files
+            | QDir::NoDotAndDotDot
+            | QDir::NoSymLinks
+        );
+        const auto files = current_num_dir.entryList();
+        num_dataset[i].resize(files.count());
+        total_picks += files.count();
+        for (int j = 0; j < files.count(); ++j) { // проходим по содержимому папки с выборками для конкретной цифры i
+
+            /* откроем изображение и сформируем матрицу признаков */
+            QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение
+            //QString debug_line;
+            Matrix input_matrix; // матрица для хранения
+            const auto width = image.width(); // узнаем ширину изображения
+            const auto height = image.height(); // узнаем высоту изображения
+
+            for (auto h = 0; h < height; h++) {
+                //auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
+
+                for (auto w = 0; w < width; w++) {
+
+                    QColor pixel_color = image.pixelColor(h, w);
+                    if (pixel_color.red() >= 200 && pixel_color.green() >= 200 && pixel_color.blue() >= 200){ // если белый цвет
+                        input_matrix[h][w] = 1;
+                    } else {
+                        input_matrix[h][w] = 0;
+                    }
+                }
+                //debug_line.push_back('\n');
+            }
+            // для отладочных целей преобразуем обратно в картинку
+            num_dataset[i][j] = input_matrix;
+        }
+    }
+
+    // тесты
+    for (int i = 0; i < NUM_DIGITS; ++i){ // идём по папкам по порядку (0-9)
+        for (int j = 0; j < num_dataset[i].size(); ++j){ // идём по цифрам в этих папках
+            perceptron.set_input_matrix(num_dataset[i][j]);
+            if (perceptron.recognition() == i){
+                ++guessed;
+            }
+        }
+    }
+
+    // покажем результат
+    double result = static_cast<double>(guessed) / static_cast<double>(total_picks);
+    result *= 100;
+    QString result_str = QString::number(result);
+    ui->label->setText(result_str + "%");
 }

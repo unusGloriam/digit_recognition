@@ -2,6 +2,7 @@
 #define TEACHER_H
 
 #include "perceptron.h"
+#include <QFileDialog>
 
 /**
  * @brief Содержит алгоритмы обучения нейронной сети

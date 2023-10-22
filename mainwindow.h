@@ -33,5 +33,6 @@ private slots:
     void onRecognizeButtonClicked();
     void onClearButtonClicked();
     void onLearnButtonClicked();
+    void onTestButtonClicked();
 };
 #endif // MAINWINDOW_H
