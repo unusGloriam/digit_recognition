@@ -23,10 +23,10 @@ MainWindow::MainWindow(QWidget *parent)
     /* настраиваем сцену */
     pScene = new PaintScene();
     ui->graphicsView->setScene(pScene);
-    ui->graphicsView->setBackgroundBrush(Qt::white);
+    ui->graphicsView->setBackgroundBrush(Qt::black);
 
-    QPixmap pixmap("29.jpg");
-    const auto scaledPixmap = pixmap.scaled(QSize(50, 50));
+    QPixmap pixmap("127.jpg");
+    const auto scaledPixmap = pixmap.scaled(QSize(56, 56));
     ui->graphicsView->scene()->addPixmap(scaledPixmap);
 
     timer = new QTimer();
@@ -142,6 +142,20 @@ void MainWindow::onRecognizeButtonClicked() {
             }
         }
     }
+    // отладка
+    QPixmap new_pixmap(QSize(28,28));
+    auto new_img = new_pixmap.toImage();
+    new_img.convertToFormat(QImage::Format_Indexed8);
+    for (auto h = 0; h < height; h++){
+        for (auto w = 0; w < width; w++){
+            if (input_matrix[h][w] == 1){
+                new_img.setPixelColor(h, w, Qt::white);
+            } else if (input_matrix[h][w] == 0){
+                new_img.setPixelColor(h, w, Qt::black);
+            }
+        }
+    }
+    new_img.save("pic_test.jpg");
 
     QMessageBox messageBox;
     messageBox.setText("Число белых пикселей = " + QString::number(nWhites));
@@ -155,6 +169,7 @@ void MainWindow::onRecognizeButtonClicked() {
     const auto digitItem = new QGraphicsTextItem(QString::number(digit)); // создадим объект с распознанной цифрой
     digitItem->setPos(-5, -25); // зададим начальную позицию цифры
     digitItem->setScale(4); // зададим масштаб цифры
+    digitItem->setDefaultTextColor(Qt::white);
     digitItem->show(); // отобразим цифру
 
     ui->graphicsView->scene()->addItem(digitItem); // прикрепим цифру к сцене
@@ -188,7 +203,9 @@ void MainWindow::onLearnButtonClicked() {
         // учим
         // составляем матрицу обучения
         QVector<QVector<Matrix>> num_dataset; // вектор векторов матриц входных сигналов для каждой цифры выборки
+        num_dataset.resize(10);
         for (int i = 0; i < 10; ++i) { // проходим по 10 векторам, каждый - с выборкой для соответствующей цифры
+            //num_dataset.push_back(QVector<Matrix>());
             QDir current_num_dir(path + "/" + static_cast<QChar>(i + '0')); // настроили путь к директории с выборками очередной цифры
             current_num_dir.setNameFilters(QStringList( // указываем искомые расширения
                     "*.jpg"
@@ -202,11 +219,11 @@ void MainWindow::onLearnButtonClicked() {
 //            for (auto k = 0; k < files.count(); k++) {  // для отладчика - смотрим найденные файлы в каталоге для очередной цифры
 //                qDebug() << "Found file: " << files[k];
 //            }
-
+            num_dataset[i].resize(files.count());
             for (int j = 0; j < files.count(); ++j) { // проходим по содержимому папки с выборками для конкретной цифры i
 
                 /* откроем изображение и сформируем матрицу признаков */
-                QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение
+                QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение                
 
                 Matrix input_matrix; // матрица для хранения
                 const auto width = image.width(); // узнаем ширину изображения
@@ -234,9 +251,27 @@ void MainWindow::onLearnButtonClicked() {
                         }
                     }
                 }
-
-                num_dataset.push_back(QVector<Matrix>());
-                num_dataset[i].resize(files.count());
+                // для отладочных целей преобразуем обратно в картинку
+                if (i == 4 && j == 0){
+                    QPixmap new_pixmap(QSize(28,28));
+                    auto new_img = new_pixmap.toImage();
+                    new_img.convertToFormat(QImage::Format_Indexed8);
+                    for (auto h = 0; h < height; h++){
+                        for (auto w = 0; w < width; w++){
+                            qDebug() << input_matrix[h][w];
+                            if (input_matrix[h][w] == 1){
+                                new_img.setPixelColor(h, w, Qt::white);
+                            } else if (input_matrix[h][w] == 0){
+                                new_img.setPixelColor(h, w, Qt::black);
+                            }
+                        }
+                        qDebug() << Qt::endl;
+                    }
+                    new_img.save(files.at(j));
+                    image.save("yayaya.jpg");
+                }
+//                num_dataset.push_back(QVector<Matrix>());
+//                num_dataset[i].resize(10);
                 num_dataset[i][j] = input_matrix;
             }
         }
@@ -244,7 +279,7 @@ void MainWindow::onLearnButtonClicked() {
         Teacher perceptron_teacher(num_dataset); // создали учителя
         perceptron_teacher.teach(); // учитель обучил...
         perceptron.set_weight_matrix(perceptron_teacher.get_weight_matrix()); // ...и передал полученные веса персептрону...
-        // ...и мы записали эти веса в текстовый файл, чтобы при след. запуске не переобучать        
+        // ...и мы записали эти веса в текстовый файл, чтобы при след. запуске не переобучать
         if (QFile::exists(WEIGHTS_FILE_NAME)){ // файл с весами уже существует - удалим
             QFile::remove(WEIGHTS_FILE_NAME);
         }
@@ -306,10 +341,10 @@ void MainWindow::onLearnButtonClicked() {
                 && (green >= 200) // зеленый полный
                 && (blue >= 200) // синий полный
             ) {
-                input_matrix[h][w] = 0; // сбрасываем признак в матрице
+                input_matrix[h][w] = 1; // сбрасываем признак в матрице
             }
             else {
-                input_matrix[h][w] = 1; // устанавливаем признак в матрице
+                input_matrix[h][w] = 0; // устанавливаем признак в матрице
             }
         }
     }

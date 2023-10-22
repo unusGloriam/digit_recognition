@@ -16,6 +16,7 @@ SOURCES += \
     paintscene.cpp \
     perceptron.cpp \
     processing_image.cpp \
+    recognition.cpp \
     simpeteacherbuilder.cpp \
     teacher.cpp \
     teacherbuilder.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     paintscene.h \
     perceptron.h \
     processing_image.h \
+    recognition.h \
     simpeteacherbuilder.h \
     teacher.h \
     teacherbuilder.h \

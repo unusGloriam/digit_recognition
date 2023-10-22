@@ -26,10 +26,10 @@ void Teacher::teach() {
         for (int i = 0; i < 10; ++i) {
             if (training_matrix[i].size() > j){
                 perceptron.set_input_matrix(training_matrix[i][j]);
-                int correct_index = perceptron.recognition();
-                if (correct_index != i) {
+                //int correct_index = perceptron.recognition();
+                //if (correct_index != i) {
                     perceptron.teach(i);
-                }
+                //}
             }
         }
 //        if (j % 500 == 0 || j == 5922 || j == 5923){
