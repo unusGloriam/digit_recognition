@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(pScene);
     ui->graphicsView->setBackgroundBrush(Qt::black);
 
-    QPixmap pixmap("127.jpg");
+    QPixmap pixmap("35.jpg");
     const auto scaledPixmap = pixmap.scaled(QSize(56, 56));
     ui->graphicsView->scene()->addPixmap(scaledPixmap);
 
@@ -123,24 +123,32 @@ void MainWindow::onRecognizeButtonClicked() {
         auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
 
         for (auto w = 0; w < width; w++) {
-            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
 
-            const auto red = qRed(pixelData); // определяем составляющую красного цвета
-            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
-            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
-
-            if (true // если это белый цвет
-                && (red >= 200) // красный полный
-                && (green >= 200) // зеленый полный
-                && (blue >= 200) // синий полный
-            ) {
-                input_matrix[h][w] = 1; // сбрасываем признак в матрице
-                nWhites++;
-            }
-            else {
-                input_matrix[h][w] = 0; // устанавливаем признак в матрице
+            QColor pixel_color = image.pixelColor(h, w);
+            if (pixel_color.red() >= 200 && pixel_color.green() >= 200 && pixel_color.blue() >= 200){ // если белый цвет
+                input_matrix[h][w] = 1;
+            } else {
+                input_matrix[h][w] = 0;
             }
         }
+//            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
+
+//            const auto red = qRed(pixelData); // определяем составляющую красного цвета
+//            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
+//            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+
+//            if (true // если это белый цвет
+//                && (red >= 200) // красный полный
+//                && (green >= 200) // зеленый полный
+//                && (blue >= 200) // синий полный
+//            ) {
+//                input_matrix[h][w] = 1; // сбрасываем признак в матрице
+//                nWhites++;
+//            }
+//            else {
+//                input_matrix[h][w] = 0; // устанавливаем признак в матрице
+//            }
+//        }
     }
     // отладка
     QPixmap new_pixmap(QSize(28,28));
@@ -155,7 +163,12 @@ void MainWindow::onRecognizeButtonClicked() {
             }
         }
     }
-    new_img.save("pic_test.jpg");
+    new_img.save("on_recognize_button.jpg");
+    QImage new_img2 = new_img.mirrored();
+    QTransform rotateTransform;
+    rotateTransform.rotate(90);
+    QImage rotatedImage = new_img2.transformed(rotateTransform);
+    rotatedImage.save("on_recognize_button_flipped.jpg");
 
     QMessageBox messageBox;
     messageBox.setText("Число белых пикселей = " + QString::number(nWhites));
@@ -223,52 +236,78 @@ void MainWindow::onLearnButtonClicked() {
             for (int j = 0; j < files.count(); ++j) { // проходим по содержимому папки с выборками для конкретной цифры i
 
                 /* откроем изображение и сформируем матрицу признаков */
-                QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение                
-
+                QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение
+                //QString debug_line;
                 Matrix input_matrix; // матрица для хранения
                 const auto width = image.width(); // узнаем ширину изображения
                 const auto height = image.height(); // узнаем высоту изображения
 
                 for (auto h = 0; h < height; h++) {
-                    auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
+                    //auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
 
                     for (auto w = 0; w < width; w++) {
-                        QRgb pixelData = rowData[w]; // получаем информацию о пикселе
 
-                        const auto red = qRed(pixelData); // определяем составляющую красного цвета
-                        const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
-                        const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+                        QColor pixel_color = image.pixelColor(h, w);
+                        if (pixel_color.red() >= 200 && pixel_color.green() >= 200 && pixel_color.blue() >= 200){ // если белый цвет
+                            input_matrix[h][w] = 1;
+                        } else {
+                            input_matrix[h][w] = 0;
+                        }
+//                        QRgb pixelData = rowData[w]; // получаем информацию о пикселе
 
-                        if (true // если это белый цвет
-                            && (red >= 200) // красный полный
-                            && (green >= 200) // зеленый полный
-                            && (blue >= 200) // синий полный
-                        ) {
-                            input_matrix[h][w] = 1; // устанавливаем признак в матрице
-                        }
-                        else {
-                            input_matrix[h][w] = 0; // сбрасываем признак в матрице
-                        }
+//                        const auto red = qRed(pixelData); // определяем составляющую красного цвета
+//                        const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
+//                        const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+
+//                        if (true // если это белый цвет
+//                            && (red >= 200) // красный полный
+//                            && (green >= 200) // зеленый полный
+//                            && (blue >= 200) // синий полный
+//                        ) {
+//                            input_matrix[h][w] = 1; // устанавливаем признак в матрице
+//                        }
+//                        else {
+//                            input_matrix[h][w] = 0; // сбрасываем признак в матрице
+//                        }
+//                        if (i == 4 && j == 0){  // отлад Очка
+//                            if (true // если это белый цвет
+//                                && (red >= 200) // красный полный
+//                                && (green >= 200) // зеленый полный
+//                                && (blue >= 200) // синий полный
+//                            ) {
+//                                debug_line.push_back('0');
+//                            }
+//                            else {
+//                                debug_line.push_back('1');
+//                            }
+//                        }
                     }
+                    //debug_line.push_back('\n');
                 }
                 // для отладочных целей преобразуем обратно в картинку
                 if (i == 4 && j == 0){
                     QPixmap new_pixmap(QSize(28,28));
                     auto new_img = new_pixmap.toImage();
                     new_img.convertToFormat(QImage::Format_Indexed8);
+
                     for (auto h = 0; h < height; h++){
                         for (auto w = 0; w < width; w++){
-                            qDebug() << input_matrix[h][w];
+                            (QChar(input_matrix[h][w]));
+                            //qDebug() << input_matrix[h][w];
                             if (input_matrix[h][w] == 1){
                                 new_img.setPixelColor(h, w, Qt::white);
                             } else if (input_matrix[h][w] == 0){
                                 new_img.setPixelColor(h, w, Qt::black);
                             }
                         }
-                        qDebug() << Qt::endl;
                     }
                     new_img.save(files.at(j));
-                    image.save("yayaya.jpg");
+                    QImage new_img2 = new_img.mirrored(true, false);
+                    new_img2.save("flipped " + files.at(j));
+                    image.save("on_random_four.jpg");
+//                    QMessageBox messageBox;
+//                    messageBox.setText(debug_line);
+//                    messageBox.exec();
                 }
 //                num_dataset.push_back(QVector<Matrix>());
 //                num_dataset[i].resize(10);
@@ -330,22 +369,28 @@ void MainWindow::onLearnButtonClicked() {
         auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
 
         for (auto w = 0; w < width; w++) {
-            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
-
-            const auto red = qRed(pixelData); // определяем составляющую красного цвета
-            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
-            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
-
-            if (true // если это белый цвет
-                && (red >= 200) // красный полный
-                && (green >= 200) // зеленый полный
-                && (blue >= 200) // синий полный
-            ) {
-                input_matrix[h][w] = 1; // сбрасываем признак в матрице
+            QColor pixel_color = image.pixelColor(h, w);
+            if (pixel_color.red() >= 200 && pixel_color.green() >= 200 && pixel_color.blue() >= 200){ // если белый цвет
+                input_matrix[h][w] = 1;
+            } else {
+                input_matrix[h][w] = 0;
             }
-            else {
-                input_matrix[h][w] = 0; // устанавливаем признак в матрице
-            }
+//            QRgb pixelData = rowData[w]; // получаем информацию о пикселе
+
+//            const auto red = qRed(pixelData); // определяем составляющую красного цвета
+//            const auto green = qGreen(pixelData); // определяем составляющую зеленого цвета
+//            const auto blue = qBlue(pixelData); // определяем составляющую синего цвета
+
+//            if (true // если это белый цвет
+//                && (red >= 200) // красный полный
+//                && (green >= 200) // зеленый полный
+//                && (blue >= 200) // синий полный
+//            ) {
+//                input_matrix[h][w] = 1; // сбрасываем признак в матрице
+//            }
+//            else {
+//                input_matrix[h][w] = 0; // устанавливаем признак в матрице
+//            }
         }
     }
 
