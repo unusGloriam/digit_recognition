@@ -25,10 +25,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setScene(pScene);
     ui->graphicsView->setBackgroundBrush(Qt::black);
 
-//    QPixmap pixmap("35.jpg");
-//    const auto scaledPixmap = pixmap.scaled(QSize(56, 56));
-//    ui->graphicsView->scene()->addPixmap(scaledPixmap);
-
     timer = new QTimer();
     connect(timer, &QTimer::timeout, this, &MainWindow::slotTimer);
     timer->start(100);
@@ -140,8 +136,6 @@ void MainWindow::onRecognizeButtonClicked() {
     digitItem->show(); // отобразим цифру
 
     ui->graphicsView->scene()->addItem(digitItem); // прикрепим цифру к сцене
-    //ui->graphicsView->sendEvent(pScene, QEvent::MouseButtonPress);
-    //sendEvent(pScene, QEvent::MouseButtonPress);
 }
 
 void MainWindow::onClearButtonClicked() {
@@ -190,7 +184,6 @@ void MainWindow::onLearnButtonClicked() {
 
                 /* откроем изображение и сформируем матрицу признаков */
                 QImage image(current_num_dir.absolutePath() + "/" + files[j]); // открываем изображение
-                //QString debug_line;
                 Matrix input_matrix; // матрица для хранения
                 const auto width = image.width(); // узнаем ширину изображения
                 const auto height = image.height(); // узнаем высоту изображения
@@ -317,12 +310,10 @@ void MainWindow::onTestButtonClicked() {
     size_t total_picks = 0; // всего картинок в тестовой выборке
     size_t guessed = 0;
 
-    // учим
-    // составляем матрицу обучения
+    // составляем матрицу тестирования
     QVector<QVector<Matrix>> num_dataset; // вектор векторов матриц входных сигналов для каждой цифры выборки
     num_dataset.resize(10);
     for (int i = 0; i < 10; ++i) { // проходим по 10 векторам, каждый - с выборкой для соответствующей цифры
-        //num_dataset.push_back(QVector<Matrix>());
         QDir current_num_dir(path + "/" + static_cast<QChar>(i + '0')); // настроили путь к директории с выборками очередной цифры
         current_num_dir.setNameFilters(QStringList( // указываем искомые расширения
                 "*.jpg"
@@ -345,8 +336,6 @@ void MainWindow::onTestButtonClicked() {
             const auto height = image.height(); // узнаем высоту изображения
 
             for (auto h = 0; h < height; h++) {
-                //auto* rowData = (QRgb*) image.scanLine(h); // получаем строку пикселей
-
                 for (auto w = 0; w < width; w++) {
 
                     QColor pixel_color = image.pixelColor(h, w);
@@ -356,7 +345,6 @@ void MainWindow::onTestButtonClicked() {
                         input_matrix[h][w] = 0;
                     }
                 }
-                //debug_line.push_back('\n');
             }
             // для отладочных целей преобразуем обратно в картинку
             num_dataset[i][j] = input_matrix;

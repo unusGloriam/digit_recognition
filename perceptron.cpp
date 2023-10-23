@@ -1,5 +1,4 @@
 #include "perceptron.h"
-#include "qdebug.h"
 
 Perceptron::Perceptron(Matrix in) {
     input_matrix = in;
@@ -53,7 +52,6 @@ QVector<int> Perceptron::get_sum_scaled_signals() {
 int Perceptron::recognition() {
     int index_neyron = 0;
     int max_sum_scaled_signals = neurons[index_neyron].count_sum_scaled_signals(input_matrix);
-    //qDebug() << "0 sum: " << max_sum_scaled_signals;
     for (int i = 1; i < NUM_DIGITS; ++i) {
         int sum_scaled_signals = neurons[i].count_sum_scaled_signals(input_matrix);
         //qDebug() << i << " sum: " << sum_scaled_signals;
@@ -62,13 +60,6 @@ int Perceptron::recognition() {
             index_neyron = i;
         }
     }
-//    for (int i = 0; i < NUM_DIGITS; ++i){
-//        neurons[i].count_sum_scaled_signals(input_matrix);
-//        if (neurons[i].recognition(input_matrix)){
-//            index_neyron = i;
-//            break;
-//        }
-//    }
     return index_neyron;
 }
 
@@ -80,7 +71,6 @@ QVector<Matrix> Perceptron::teach(int correct_index) {
             }
         }
         neurons[correct_index].inc_weight(input_matrix);
-        return get_weight_matrix();
 
     return get_weight_matrix();
 }

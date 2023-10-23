@@ -9,32 +9,20 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    geneticteacherbuilder.cpp \
     main.cpp \
     mainwindow.cpp \
     neuron.cpp \
     paintscene.cpp \
     perceptron.cpp \
-    processing_image.cpp \
-    recognition.cpp \
-    simpeteacherbuilder.cpp \
-    teacher.cpp \
-    teacherbuilder.cpp \
-    teacherdirector.cpp
+    teacher.cpp
 
 HEADERS += \
-    geneticteacherbuilder.h \
     main.h \
     mainwindow.h \
     neuron.h \
     paintscene.h \
     perceptron.h \
-    processing_image.h \
-    recognition.h \
-    simpeteacherbuilder.h \
-    teacher.h \
-    teacherbuilder.h \
-    teacherdirector.h
+    teacher.h
 
 FORMS += \
     mainwindow.ui

@@ -15,17 +15,7 @@ public:
     explicit PaintScene(QObject *parent = 0);
     ~PaintScene();
 
-    /**
-     * @brief setPainted
-     * @param painted
-     */
-
     void setPainted(const bool painted);
-
-    /**
-     * @brief isPainted
-     * @return
-     */
 
     bool isPainted() const;
 
